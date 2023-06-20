@@ -38,7 +38,7 @@ const Productcontrolar = require("../controllers/productcontroller");
 
 product.post(
   "/addproduct",
-  upload.single("image1"),
+  upload.single("image"),
   Productcontrolar.createproduct
 );
 
@@ -46,7 +46,7 @@ product.get("/getproduct", auth, Productcontrolar.getproduct);
 product.get("/getproduct/:id", auth, Productcontrolar.getproductbyid);
 product.put(
   "/updateproduct/:id",
-  upload.single("image1"),
+  upload.single("image"),
   auth,
   Productcontrolar.updateproduct
 );

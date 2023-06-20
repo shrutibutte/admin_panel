@@ -1,7 +1,7 @@
-import React from 'react';
-import "../style/sidebar.css"
+import React from "react";
+import "../style/sidebar.css";
+import { Link } from "react-router-dom";
 const Sidebar = () => {
-    
   return (
     <section id="sidebar">
       <a href="#" className="brand">
@@ -16,19 +16,23 @@ const Sidebar = () => {
           </a>
         </li>
         <li>
-        <a href="#">
+          <a href="#">
             <i className="bx bxs-doughnut-chart"></i>
             <span className="text">Profile</span>
           </a>
         </li>
         <li>
-          
-          <a href="#">
+          <Link href="/products">
             <i className="bx bxs-shopping-bag-alt"></i>
             <span className="text">My Store</span>
-          </a>
+          </Link>
         </li>
-       
+        <li>
+          <Link to="/addproduct">
+            <i className="bx bxs-shopping-bag-alt"></i>
+            <span className="text">Add Procuct</span>
+          </Link>
+        </li>
         <li>
           <a href="#">
             <i className="bx bxs-group"></i>
@@ -44,10 +48,24 @@ const Sidebar = () => {
           </a>
         </li>
         <li>
-          <a href="#" className="logout">
+          <Link to="/register">
+            <i className="bx bxs-cog"></i>
+            <span className="text">Create Admin</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/login"
+            className="logout"
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/";
+            }}
+          >
             <i className="bx bxs-log-out-circle"></i>
             <span className="text">Logout</span>
-          </a>
+          </Link>
         </li>
       </ul>
     </section>

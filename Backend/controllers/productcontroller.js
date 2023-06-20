@@ -1,32 +1,50 @@
 const productSchema = require("../module/Product");
 const createproduct = async (req, res) => {
-  const productname = await productSchema.findOne({ name: req.body.name });
+  const {
+    name,
+    price,
+    image,
+    description,
+    healthy,
+    tags,
+    category,
+    quantity,
+    feature,
+    weight,
+    type,
+    currency,
+  } = req.body;
+  console.log(name, price, image, description);
+  const productname = await productSchema.findOne({ name });
   console.log(productname);
+  console.log(".......");
   if (productname) {
     return res.status(400).send("Product already exist");
   }
   try {
     const product = new productSchema({
-      name: req.body.name,
-      price: req.body.price,
-      image: req.file.filename,
-      description: req.body.description,
-      healthy: req.body.healthy,
-      type: req.body.type,
-      category: req.body.category,
-      weight: req.body.weight,
-      feature: req.body.feature,
-      tags: req.body.tags,
-      currency: req.body.currency,
-      quantity: req.body.quantity,
+      name: name,
+      price: price,
+      image: image,
+      description: description,
+      healthy: healthy,
+      tags: tags,
+      category: category,
+      quantity: quantity,
+      feature: feature,
+      weight: weight,
+      type: type,
+      currency: currency,
     });
     await product.save();
-    res.status(200).send({
+    res.status(200).json({
       message: "Product added successfully",
       product,
     });
   } catch (error) {
-    res.send(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
   }
 };
 
@@ -56,55 +74,6 @@ const getproductbyid = async (req, res) => {
   }
 };
 
-// const updateproduct = async (req, res) => {
-//   const product = await productSchema.findById(req.params.id);
-//   if (!product) {
-//     return res.status(404).json({
-//       message: "Product not found",
-//     });
-//   }
-//   const {
-//     name,
-//     price,
-//     description,
-//     healthy,
-//     type,
-//     category,
-//     weight,
-//     feature,
-//     tags,
-//     currency,
-//     quantity,
-//   } = req.body;
-//   const newitem = {
-//     name: name,
-//     price: price,
-//     description: description,
-//     healthy: healthy,
-//     type: type,
-//     category: category,
-//     weight: weight,
-//     feature: feature,
-//     tags: tags,
-//     currency: currency,
-//     quantity: quantity,
-//     // image: req.file.filename,
-//   };
-//   try {
-//     await productSchema.findByIdAndUpdate(req.params.id, newitem, {
-//       new: true,
-//     });
-
-//     res.status(200).json({
-//       message: "Product updated successfully",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({
-//       message: "Something went wrong",
-//     });
-//   }
-// };
 const updateproduct = async (req, res) => {
   try {
     const product = await productSchema.findById(req.params.id);
