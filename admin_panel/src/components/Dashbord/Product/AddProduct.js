@@ -1,47 +1,80 @@
 import React, { useState } from "react";
 import Sidebar from "../../Sidebar";
 import swal from "sweetalert";
+
 const AddProduct = () => {
-  const [productData, setProductData] = useState({
-    name: "",
-    price: 0,
-    image: "",
-    description: "",
-    healthy: "",
-    type: "",
-    category: "",
-    weight: 0,
-    feature: "",
-    tags: "",
-    currency: 0,
-    quantity: 0,
-  });
-
-  const handleChange = (e) => {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const [name, setname] = useState("");
+  const [price, setprice] = useState("");
+  const [image, setimage] = useState("");
+  const [description, setdescription] = useState("");
+  const [healthy, sethealthy] = useState("");
+  const [type, settype] = useState("");
+  const [category, setcategory] = useState("");
+  const [weight, setweight] = useState("");
+  const [feature, setfeature] = useState("");
+  const [tags, settags] = useState("");
+  const [currency, setcurrency] = useState("");
+  const [quantity, setquantity] = useState("");
+  function convertTobase64(file) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  }
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/addproduct", {
-      method: "POST",
+    let images = e.target.image.files[0];
+    const bs64 = await convertTobase64(images);
+    const image = bs64;
+    const formData = {
+      name,
+      price,
+      description,
+      healthy,
+      type,
+      category,
+      weight,
+      tags,
+      image,
+      feature,
+      currency,
+      quantity,
+    };
+    console.log(formData);
+    const res = await fetch("http://localhost:5000/api/addproduct", {
       headers: {
+        "Allow-Cross-Origin": "*",
         "Content-Type": "application/json",
-        "Allow-Control-Allow-Origin": "*",
-        token: "Bearer " + localStorage.getItem("token"),
+        token: "bearer " + localStorage.getItem("token"),
       },
-      body: JSON.stringify(productData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data) {
-          swal("Product Added Successfully", "", "success");
-        } else {
-          swal("Product Added Failed", "", "error");
-        }
+      method: "POST",
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    if (data.error) {
+      swal({
+        title: "Error",
+        text: `${data.error}`,
+        icon: "error",
+        button: "Ok",
       });
-    e.target.reset();
+    } else {
+      swal({
+        title: "Success",
+        text: `${data.message}`,
+        icon: "success",
+        button: "Ok",
+      });
+    }
+    // e.target.reset();
   };
 
   return (
@@ -53,6 +86,7 @@ const AddProduct = () => {
           onSubmit={handleSubmit}
           className="
         p-3 col-md-10 mx-auto"
+          encType="multipart/form-data"
         >
           <div className="mb-3 ">
             <label htmlFor="name" className="form-label">
@@ -63,8 +97,9 @@ const AddProduct = () => {
               className="form-control"
               id="name"
               name="name"
-              value={productData.name}
-              onChange={handleChange}
+              onChange={(e) => {
+                setname(e.target.value);
+              }}
               required
             />
           </div>
@@ -78,8 +113,9 @@ const AddProduct = () => {
               className="form-control"
               id="price"
               name="price"
-              value={productData.price}
-              onChange={handleChange}
+              onChange={(e) => {
+                setprice(e.target.value);
+              }}
               required
             />
           </div>
@@ -93,8 +129,9 @@ const AddProduct = () => {
               className="form-control"
               id="image"
               name="image"
-              value={productData.image}
-              onChange={handleChange}
+              onChange={(e) => {
+                setimage(e.target.files[0]);
+              }}
               required
             />
           </div>
@@ -107,8 +144,9 @@ const AddProduct = () => {
               className="form-control"
               id="description"
               name="description"
-              value={productData.description}
-              onChange={handleChange}
+              onChange={(e) => {
+                setdescription(e.target.value);
+              }}
               required
             ></textarea>
           </div>
@@ -122,8 +160,9 @@ const AddProduct = () => {
               className="form-control"
               id="healthy"
               name="healthy"
-              value={productData.healthy}
-              onChange={handleChange}
+              onChange={(e) => {
+                sethealthy(e.target.value);
+              }}
               required
             />
           </div>
@@ -136,13 +175,16 @@ const AddProduct = () => {
               className="form-control form-select"
               id="type"
               name="type"
-              value={productData.type}
-              onChange={handleChange}
+              onChange={(e) => {
+                settype(e.target.value);
+              }}
               required
             >
-              <option value="fruit">Fruit</option>
+              <option value="fruit" selected>
+                Fruit
+              </option>
               <option value="vegetable">Vegetable</option>
-              <option value="meat">Masale</option>
+              <option value="Masale">Masale</option>
               <option value="fish">Oil</option>
             </select>
           </div>
@@ -155,13 +197,16 @@ const AddProduct = () => {
               className="form-control form-select"
               id="category"
               name="category"
-              value={productData.category}
-              onChange={handleChange}
+              onChange={(e) => {
+                setcategory(e.target.value);
+              }}
               required
             >
-              <option value="fruit">Fruit</option>
+              <option value="fruit" selected>
+                Fruit
+              </option>
               <option value="vegetable">Vegetable</option>
-              <option value="meat">Masale</option>
+              <option value="Masale">Masale</option>
               <option value="fish">Oil</option>
             </select>
           </div>
@@ -175,8 +220,9 @@ const AddProduct = () => {
               className="form-control"
               id="weight"
               name="weight"
-              value={productData.weight}
-              onChange={handleChange}
+              onChange={(e) => {
+                setweight(e.target.value);
+              }}
               required
             />
           </div>
@@ -190,8 +236,9 @@ const AddProduct = () => {
               className="form-control"
               id="feature"
               name="feature"
-              value={productData.feature}
-              onChange={handleChange}
+              onChange={(e) => {
+                setfeature(e.target.value);
+              }}
               required
             />
           </div>
@@ -205,8 +252,9 @@ const AddProduct = () => {
               className="form-control"
               id="tags"
               name="tags"
-              value={productData.tags}
-              onChange={handleChange}
+              onChange={(e) => {
+                settags(e.target.value);
+              }}
               required
             />
           </div>
@@ -220,8 +268,9 @@ const AddProduct = () => {
               className="form-control"
               id="currency"
               name="currency"
-              value={productData.currency}
-              onChange={handleChange}
+              onChange={(e) => {
+                setcurrency(e.target.value);
+              }}
               required
             />
           </div>
@@ -235,8 +284,9 @@ const AddProduct = () => {
               className="form-control"
               id="quantity"
               name="quantity"
-              value={productData.quantity}
-              onChange={handleChange}
+              onChange={(e) => {
+                setquantity(e.target.value);
+              }}
               required
             />
           </div>

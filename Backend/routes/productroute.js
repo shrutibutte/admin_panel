@@ -30,26 +30,19 @@ const storage = multer.diskStorage({
     });
   },
 });
+
+console.log("testsree");
 console.log(storage);
 const upload = multer({ storage: storage });
 
 const Productcontrolar = require("../controllers/productcontroller");
 // check image alredy exist or not
 
-product.post(
-  "/addproduct",
-  upload.single("image"),
-  Productcontrolar.createproduct
-);
+product.post("/addproduct", auth, Productcontrolar.createproduct);
 
 product.get("/getproduct", auth, Productcontrolar.getproduct);
 product.get("/getproduct/:id", auth, Productcontrolar.getproductbyid);
-product.put(
-  "/updateproduct/:id",
-  upload.single("image"),
-  auth,
-  Productcontrolar.updateproduct
-);
+product.put("/updateproduct/:id", auth, Productcontrolar.updateproduct);
 product.delete("/deleteproduct/:id", auth, Productcontrolar.deleteproduct);
 
 module.exports = product;
