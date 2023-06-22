@@ -26,10 +26,9 @@ app.use("/", userroute);
 
 try {
   const asyncFunction = async () => {
-    await mongoose.connect("mongodb://127.0.0.1:27017/FreshFood", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(
+      "mongodb+srv://Tuppalwad:vyankatesh@vyankatesh.hyj1v2q.mongodb.net/?retryWrites=true&w=majority"
+    );
     console.log("Connected to MongoDB");
   };
   asyncFunction();

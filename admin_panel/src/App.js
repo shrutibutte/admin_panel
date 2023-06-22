@@ -7,6 +7,7 @@ import Login1 from "./components/Autho/Login1";
 import Register from "./components/Autho/RegisterAdmin";
 import ProductList from "./components/Dashbord/Product/ProductList";
 import AddProuct from "./components/Dashbord/Product/AddProduct";
+import Allproduct from "./components/Dashbord/Product/Allproduct";
 
 const checkAuth = () => {
   const token = localStorage.getItem("token");
@@ -25,7 +26,7 @@ function App() {
           {checkAuth() ? (
             <>
               <Route path="/Home" element={<AdminHub />} />
-              <Route path="/products" element={<ProductList />} />
+              <Route path="/products" element={<Allproduct />} />
               <Route path="/addproduct" element={<AddProuct />} />
               <Route path="/register" element={<Register />} />
               <Route path="/mystore" element={<MyStore />} />

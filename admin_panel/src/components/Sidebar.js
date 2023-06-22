@@ -22,7 +22,7 @@ const Sidebar = () => {
           </a>
         </li>
         <li>
-          <Link href="/products">
+          <Link to="/products">
             <i className="bx bxs-shopping-bag-alt"></i>
             <span className="text">My Store</span>
           </Link>

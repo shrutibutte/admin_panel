@@ -1,49 +1,44 @@
 const productSchema = require("../module/Product");
 const createproduct = async (req, res) => {
-  const {
-    name,
-    price,
-    image,
-    description,
-    healthy,
-    tags,
-    category,
-    quantity,
-    feature,
-    weight,
-    type,
-    currency,
-  } = req.body;
-  console.log(name, price, image, description);
-  const productname = await productSchema.findOne({ name });
-  console.log(productname);
-  console.log(".......");
-  if (productname) {
-    return res.status(400).send("Product already exist");
-  }
+  const { name } = req.body;
+  console.log("testtest");
+  console.log(req.body);
   try {
-    const product = new productSchema({
-      name: name,
-      price: price,
-      image: image,
-      description: description,
-      healthy: healthy,
-      tags: tags,
-      category: category,
-      quantity: quantity,
-      feature: feature,
-      weight: weight,
-      type: type,
-      currency: currency,
+    // Check if product already exists
+    const product = await productSchema.findOne({ name });
+    if (product) {
+      return res.status(400).json({
+        error: "Product already exists",
+      });
+    }
+
+    // Create a new product
+    const newProduct = new productSchema({
+      name: req.body.name,
+      price: req.body.price,
+      image: req.file.image,
+      description: req.body.description,
+      healthy: req.body.healthy,
+      type: req.body.type,
+      category: req.body.category,
+      weight: req.body.weight,
+      feature: req.body.feature,
+      tags: req.body.tags,
+      currency: req.body.currency,
+      quantity: req.body.quantity,
     });
-    await product.save();
+
+    await newProduct.save();
+
     res.status(200).json({
       message: "Product added successfully",
-      product,
+      product: newProduct,
     });
   } catch (error) {
+    console.log("first");
+    console.log(error);
     res.status(500).json({
-      message: "Something went wrong",
+      error: "Something went wrong",
     });
   }
 };
@@ -51,9 +46,13 @@ const createproduct = async (req, res) => {
 const getproduct = async (req, res) => {
   try {
     const product = await productSchema.find({});
-    res.status(200).send(product);
+    res.status(200).json({
+      data: product,
+    });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      error: error,
+    });
   }
 };
 
